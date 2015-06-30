@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/skeate/seque.svg?branch=master)](https://travis-ci.org/skeate/seque)
+
 # seque
 chainable utility methods for javascript
 
