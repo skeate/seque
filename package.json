@@ -1,0 +1,32 @@
+{
+  "name": "seque",
+  "version": "1.0.0",
+  "description": "Chainable utility functions for Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha --compilers coffee:coffee-script/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skeate/seque.git"
+  },
+  "keywords": [
+    "chain",
+    "sequence",
+    "javascript",
+    "utility"
+  ],
+  "author": "Jonathan Skeate",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/skeate/seque/issues"
+  },
+  "homepage": "https://github.com/skeate/seque#readme",
+  "devDependencies": {
+    "bluebird": "^2.9.30",
+    "chai": "^3.0.0",
+    "coffee-script": "^1.9.3",
+    "mocha": "^2.2.5",
+    "sinon": "^1.15.3"
+  }
+}
