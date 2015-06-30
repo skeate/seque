@@ -12,7 +12,7 @@ arr
   .else()
   .filter(x => x % 2)
   .endif()
-  // at this point we have either [2,4,6] or [1,3,5] dependinging on the value
+  // at this point we have either [2,4,6] or [1,3,5] depending on the value
   // of useEvens
 ```
 
