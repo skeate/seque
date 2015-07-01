@@ -43,6 +43,7 @@ function applyStack(obj, callStack) {
 }
 
 Object.prototype.if = function(cond) {
+  var that = this;
   return wrap(this, 'endif', ['else'], function(callStack) {
     for (var i = 0; i < callStack.length; i++) {
       if (callStack[i][0] === 'else') {
@@ -51,16 +52,17 @@ Object.prototype.if = function(cond) {
     }
     var ifStack = callStack.slice(0, i);
     var elseStack = callStack.slice(i + 1, callStack.length);
-    return applyStack(this, (cond) ? ifStack : elseStack);
-  }.bind(this));
+    return applyStack(that, (cond) ? ifStack : elseStack);
+  });
 };
 
 Object.prototype.while = function(condFunc) {
+  var that = this;
   return wrap(this, 'endwhile', [], function(callStack) {
-    var ret = this;
+    var ret = that;
     while (condFunc()) {
-      applyStack(this, callStack);
+      applyStack(that, callStack);
     }
     return ret;
-  }.bind(this));
+  });
 };
