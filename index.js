@@ -59,10 +59,19 @@ Object.prototype.if = function(cond) {
 Object.prototype.while = function(condFunc) {
   var that = this;
   return wrap(this, 'endwhile', [], function(callStack) {
-    var ret = that;
     while (condFunc()) {
-      applyStack(that, callStack);
+      that = applyStack(that, callStack);
     }
-    return ret;
+    return that;
+  });
+};
+
+Object.prototype.loop = function(n) {
+  var that = this;
+  return wrap(this, 'endloop', [], function(callStack) {
+    while (n--) {
+      that = applyStack(that, callStack);
+    }
+    return that;
   });
 };

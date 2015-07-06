@@ -5,7 +5,7 @@ chai.should()
 
 require '../index'
 
-describe 'if/else', ->
+describe 'if(cond)..else..endif', ->
   it 'should run the next chained function conditionally', ->
     square = sinon.spy()
     cube = sinon.spy()
@@ -90,14 +90,26 @@ describe 'if/else', ->
     spy3.callCount.should.equal 0
     spy4.callCount.should.equal 10
 
-describe 'while', ->
-  it 'should loop while the passed function evaluates true', ->
-    spy1 = sinon.spy()
-    loopCount = 5
-    looper = -> loopCount--
-    tmp = [1]
-    tmp
-      .while looper
-      .map spy1
-      .endwhile()
-    spy1.callCount.should.equal 5
+describe 'loops', ->
+  describe 'while(condFunc)..endwhile', ->
+    it 'should loop while condFunc evaluates true', ->
+      times2 = sinon.spy (x) -> x * 2
+      loopCount = 5
+      looper = -> loopCount--
+      tmp = [1]
+      tmp
+        .while looper
+        .map times2
+        .endwhile()
+        .should.deep.equal [32]
+      times2.callCount.should.equal 5
+  describe 'loop(n)..endloop', ->
+    it 'should loop n times', ->
+      times2 = sinon.spy (x) -> x * 2
+      tmp = [1]
+      tmp
+        .loop 5
+        .map times2
+        .endloop()
+        .should.deep.equal [32]
+      times2.callCount.should.equal 5
