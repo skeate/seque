@@ -1,7 +1,37 @@
 // Karma configuration
 // Generated on Tue Jun 30 2015 22:19:03 GMT-0400 (EDT)
-
 module.exports = function(config) {
+  var customLaunchers = {
+    slChrome: {
+      base: 'SauceLabs',
+      browserName: 'chrome'
+    },
+    slFirefox: {
+      base: 'SauceLabs',
+      browserName: 'firefox'
+    },
+    slIE9: {
+      base: 'SauceLabs',
+      browserName: 'internet explorer',
+      version: '9'
+    },
+    slIE10: {
+      base: 'SauceLabs',
+      browserName: 'internet explorer',
+      version: '10'
+    },
+    slIE11: {
+      base: 'SauceLabs',
+      browserName: 'internet explorer',
+      version: '11'
+    }
+  };
+  var browsers = process.env.CI ?
+    Object.keys(customLaunchers) :
+    ['Chrome', 'Firefox', 'PhantomJS'];
+  var reporters = process.env.CI ?
+    ['dots', 'saucelabs'] :
+    ['mocha'];
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -35,7 +65,7 @@ module.exports = function(config) {
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['dots'],
+    reporters: reporters,
 
     // web server port
     port: 9876,
@@ -52,10 +82,15 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'Firefox', 'PhantomJS'],
+    browsers: browsers,
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false
+    singleRun: process.env.CI || false,
+
+    sauceLabs: {
+      testName: 'Seque tests'
+    },
+    customLaunchers: customLaunchers
   });
 };
