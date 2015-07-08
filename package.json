@@ -29,6 +29,7 @@
     "coffeeify": "^1.1.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.1.0",
+    "gulp-mocha": "^2.1.2",
     "gulp-umd": "^0.2.0",
     "karma": "^0.12.37",
     "karma-browserify": "^4.2.1",
