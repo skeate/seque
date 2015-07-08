@@ -2,7 +2,7 @@
   "name": "seque",
   "version": "1.0.0",
   "description": "Chainable utility functions for Javascript",
-  "main": "index.js",
+  "main": "dist/seque.js",
   "scripts": {
     "test": "./node_modules/.bin/_mocha --compilers coffee:coffee-script/register"
   },
@@ -27,6 +27,9 @@
     "chai": "^3.0.0",
     "coffee-script": "^1.9.3",
     "coffeeify": "^1.1.0",
+    "gulp": "^3.9.0",
+    "gulp-babel": "^5.1.0",
+    "gulp-umd": "^0.2.0",
     "karma": "^0.12.37",
     "karma-browserify": "^4.2.1",
     "karma-chrome-launcher": "^0.2.0",

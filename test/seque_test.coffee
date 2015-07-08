@@ -3,7 +3,7 @@ Promise = require 'bluebird'
 chai = require 'chai'
 chai.should()
 
-require '../index'
+require '../dist/seque'
 
 describe 'if(cond)..else..endif', ->
   it 'should run the next chained function conditionally', ->
