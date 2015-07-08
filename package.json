@@ -4,7 +4,7 @@
   "description": "Chainable utility functions for Javascript",
   "main": "dist/seque.js",
   "scripts": {
-    "test": "./node_modules/.bin/_mocha --compilers coffee:coffee-script/register"
+    "test": "gulp build && gulp mocha && gulp karma-ci"
   },
   "repository": {
     "type": "git",
