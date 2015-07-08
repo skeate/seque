@@ -10,11 +10,11 @@ module.exports = function(config) {
       base: 'SauceLabs',
       browserName: 'firefox'
     },
-    slIE9: {
-      base: 'SauceLabs',
-      browserName: 'internet explorer',
-      version: '9'
-    },
+    //slIE9: {
+      //base: 'SauceLabs',
+      //browserName: 'internet explorer',
+      //version: '9'
+    //},
     slIE10: {
       base: 'SauceLabs',
       browserName: 'internet explorer',
