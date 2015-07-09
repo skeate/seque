@@ -26,8 +26,8 @@ var Seque = (function () {
         return x;
       } : arguments[3];
 
-      var stopAfterCount = typeof until === 'number';
-      if (!stopAfterCount) {
+      var stopCount = typeof until === 'number';
+      if (!stopCount) {
         otherMethods.push(until);
       }
       var proto = obj;
@@ -38,7 +38,7 @@ var Seque = (function () {
           if (methodName !== until) {
             callStack.push([methodName, arguments]);
           }
-          if (stopAfterCount && callStack.length >= until || methodName === until) {
+          if (stopCount && callStack.length >= until || methodName === until) {
             return callback(callStack);
           }
           return obj;
@@ -70,16 +70,18 @@ var Seque = (function () {
   };
 
   Object.prototype['if'] = function (cond) {
-    var that = this;
+    var _this = this;
+
     return utils.wrap(this, 'endif', ['else'], function (callStack) {
-      for (var i = 0; i < callStack.length; i++) {
+      var i = undefined;
+      for (i = 0; i < callStack.length; i++) {
         if (callStack[i][0] === 'else') {
           break;
         }
       }
       var ifStack = callStack.slice(0, i);
       var elseStack = callStack.slice(i + 1, callStack.length);
-      return utils.applyStack(that, cond ? ifStack : elseStack);
+      return utils.applyStack(_this, cond ? ifStack : elseStack);
     });
   };
 
