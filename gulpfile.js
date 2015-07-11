@@ -4,6 +4,7 @@ var umd = require('gulp-umd');
 var karma = require('karma').server;
 var mocha = require('gulp-mocha');
 require('coffee-script/register');
+require('babel/register');
 
 gulp.task('build', function() {
   gulp.src('src/**/*.js')
@@ -13,25 +14,9 @@ gulp.task('build', function() {
   ;
 });
 
-gulp.task('tdd', function(done) {
-  gulp.watch('src/**/*.js', ['build']);
-  karma.start({
-    configFile: __dirname + '/karma.conf.js'
-  }, done);
-});
-
-gulp.task('mocha', function() {
+gulp.task('test', function() {
   gulp.src('./test/seque_test.coffee', {read: false})
     .pipe(mocha());
 });
 
-gulp.task('karma-ci', function(done) {
-  karma.start({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done);
-});
-
-// note: this does not actually seem to work for various reasons :/
-gulp.task('test', ['mocha', 'karma-ci']);
-gulp.task('default', ['build', 'tdd']);
+gulp.task('default', ['build']);

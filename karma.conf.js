@@ -30,8 +30,9 @@ module.exports = function(config) {
     Object.keys(customLaunchers) :
     ['Chrome', 'Firefox', 'PhantomJS'];
   var reporters = process.env.CI ?
-    ['dots', 'saucelabs'] :
-    ['mocha'];
+    ['dots', 'saucelabs', 'coverage'] :
+    ['mocha', 'coverage'];
+
   config.set({
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
@@ -39,12 +40,13 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['browserify', 'mocha'],
+    frameworks: ['mocha', 'sinon-chai'],
 
     // list of files / patterns to load in the browser
     files: [
+      'node_modules/bluebird/js/browser/bluebird.min.js',
       'test/**/*.coffee',
-      'dist/index.js'
+      'src/**/*.js'
     ],
 
     // list of files to exclude
@@ -54,17 +56,18 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      '**/*.coffee': ['browserify']
+      'src/**/*.js': ['babel', 'coverage'],
+      'test/**/*.coffee': ['coffee']
     },
 
-    browserify: {
-      transform: ['coffeeify'],
-      extensions: ['.coffee']
+    coverageReporter: {
+      reporters: [
+        {type: 'text-summary'},
+        {type: 'html'},
+        {type: 'lcov'}
+      ]
     },
 
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
     reporters: reporters,
 
     // web server port
@@ -91,6 +94,7 @@ module.exports = function(config) {
     sauceLabs: {
       testName: 'Seque tests'
     },
+
     customLaunchers: customLaunchers
   });
 };

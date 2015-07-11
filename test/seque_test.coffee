@@ -1,9 +1,9 @@
-sinon = require 'sinon'
-Promise = require 'bluebird'
-chai = require 'chai'
-chai.should()
-
-require '../dist/seque'
+if !window.__karma__
+  sinon = require 'sinon'
+  Promise = require 'bluebird'
+  chai = require 'chai'
+  chai.should()
+  require '../src/seque'
 
 describe 'if(cond)..else..endif', ->
   it 'should run the next chained function conditionally', ->

@@ -8,7 +8,7 @@
 
 let Seque = (function() {
   let utils = {
-    wrap(obj, until = 1, otherMethods = [], callback = x => x) {
+    wrap(obj, until, otherMethods, callback) {
       let stopCount = typeof(until) === 'number';
       if (!stopCount) {
         otherMethods.push(until);
