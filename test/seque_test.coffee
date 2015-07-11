@@ -1,4 +1,4 @@
-if !window.__karma__
+if typeof(window) == 'undefined'
   sinon = require 'sinon'
   Promise = require 'bluebird'
   chai = require 'chai'
