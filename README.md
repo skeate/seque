@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/skeate/seque.png?label=ready&title=Ready)](https://waffle.io/skeate/seque)
 [![Build Status](https://travis-ci.org/skeate/seque.svg?branch=master)](https://travis-ci.org/skeate/seque)
 [![Test Coverage](https://codeclimate.com/github/skeate/seque/badges/coverage.svg)](https://codeclimate.com/github/skeate/seque/coverage)
 [![Code Climate](https://codeclimate.com/github/skeate/seque/badges/gpa.svg)](https://codeclimate.com/github/skeate/seque)
