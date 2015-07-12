@@ -113,3 +113,23 @@ describe 'loops', ->
         .endloop()
         .should.deep.equal [32]
       times2.callCount.should.equal 5
+
+if typeof(Proxy) != 'undefined'
+  describe 'proxy version (browser dependent)', ->
+    it 'should allow different object types to be chained', ->
+      x = {
+        y: -> {
+          z: -> 3
+        },
+        q: -> 5
+      }
+      x
+        .if true
+        .y()
+        .z()
+        .else()
+        .q()
+        .endif()
+        .should.equal 3
+else
+  console.log 'no proxy support'

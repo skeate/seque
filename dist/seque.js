@@ -19,46 +19,60 @@
 
 var Seque = (function () {
   var utils = {
-    wrap: function wrap(obj) {
-      var until = arguments[1] === undefined ? 1 : arguments[1];
-      var otherMethods = arguments[2] === undefined ? [] : arguments[2];
-      var callback = arguments[3] === undefined ? function (x) {
-        return x;
-      } : arguments[3];
-
+    wrap: function wrap(obj, until, otherMethods, callback) {
       var stopCount = typeof until === 'number';
-      if (!stopCount) {
-        otherMethods.push(until);
-      }
-      var proto = obj;
-      obj = Object.create(proto);
       var callStack = [];
-      var dummyMethod = function dummyMethod(methodName) {
-        return function () {
-          if (methodName !== until) {
-            callStack.push([methodName, arguments]);
+      if (typeof Proxy !== 'undefined') {
+        obj = new Proxy(obj, {
+          get: function get(target, name) {
+            if (stopCount && callStack.length >= until || name === until) {
+              return function () {
+                return callback(callStack);
+              };
+            }
+            return new Proxy(function () {}, {
+              apply: function apply(target, thisArg, argList) {
+                callStack.push([name, argList]);
+                return obj;
+              }
+            });
           }
-          if (stopCount && callStack.length >= until || methodName === until) {
-            return callback(callStack);
+        });
+      } else {
+        (function () {
+          if (!stopCount) {
+            otherMethods.push(until);
           }
-          return obj;
-        };
-      };
-      var makeStub = function makeStub(method) {
-        if (proto[method] instanceof Function && !obj.hasOwnProperty(method)) {
-          if (method === 'hasOwnProperty') {
-            return;
+          var proto = obj;
+          obj = Object.create(proto);
+          var dummyMethod = function dummyMethod(methodName) {
+            return function () {
+              if (methodName !== until) {
+                callStack.push([methodName, arguments]);
+              }
+              if (stopCount && callStack.length >= until || methodName === until) {
+                return callback(callStack);
+              }
+              return obj;
+            };
+          };
+          var makeStub = function makeStub(method) {
+            if (proto[method] instanceof Function && !obj.hasOwnProperty(method)) {
+              if (method === 'hasOwnProperty') {
+                return;
+              }
+              obj[method] = dummyMethod(method);
+            }
+          };
+          while (proto) {
+            Object.getOwnPropertyNames(proto).forEach(makeStub);
+            proto = Object.getPrototypeOf(proto);
           }
-          obj[method] = dummyMethod(method);
-        }
-      };
-      while (proto) {
-        Object.getOwnPropertyNames(proto).forEach(makeStub);
-        proto = Object.getPrototypeOf(proto);
+          otherMethods.forEach(function (stubMethod) {
+            obj[stubMethod] = dummyMethod(stubMethod);
+          });
+        })();
       }
-      otherMethods.forEach(function (stubMethod) {
-        obj[stubMethod] = dummyMethod(stubMethod);
-      });
       return obj;
     },
 

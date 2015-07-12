@@ -10,36 +10,53 @@ let Seque = (function() {
   let utils = {
     wrap(obj, until, otherMethods, callback) {
       let stopCount = typeof(until) === 'number';
-      if (!stopCount) {
-        otherMethods.push(until);
-      }
-      let proto = obj;
-      obj = Object.create(proto);
       let callStack = [];
-      let dummyMethod = methodName => function() {
-        if (methodName !== until) {
-          callStack.push([methodName, arguments]);
-        }
-        if (stopCount && callStack.length >= until || methodName === until) {
-          return callback(callStack);
-        }
-        return obj;
-      };
-      let makeStub = method => {
-        if (proto[method] instanceof Function && !obj.hasOwnProperty(method)) {
-          if (method === 'hasOwnProperty') {
-            return;
+      if (typeof(Proxy) !== 'undefined') {
+        obj = new Proxy(obj, {
+          get(target, name) {
+            if (stopCount && callStack.length >= until || name === until) {
+              return () => callback(callStack);
+            }
+            return new Proxy(function() {}, {
+              apply(target, thisArg, argList) {
+                callStack.push([name, argList]);
+                return obj;
+              }
+            });
           }
-          obj[method] = dummyMethod(method);
+        });
+      } else {
+        if (!stopCount) {
+          otherMethods.push(until);
         }
-      };
-      while (proto) {
-        Object.getOwnPropertyNames(proto).forEach(makeStub);
-        proto = Object.getPrototypeOf(proto);
+        let proto = obj;
+        obj = Object.create(proto);
+        let dummyMethod = methodName => function() {
+          if (methodName !== until) {
+            callStack.push([methodName, arguments]);
+          }
+          if (stopCount && callStack.length >= until || methodName === until) {
+            return callback(callStack);
+          }
+          return obj;
+        };
+        let makeStub = method => {
+          if (proto[method] instanceof Function &&
+              !obj.hasOwnProperty(method)) {
+            if (method === 'hasOwnProperty') {
+              return;
+            }
+            obj[method] = dummyMethod(method);
+          }
+        };
+        while (proto) {
+          Object.getOwnPropertyNames(proto).forEach(makeStub);
+          proto = Object.getPrototypeOf(proto);
+        }
+        otherMethods.forEach(stubMethod => {
+          obj[stubMethod] = dummyMethod(stubMethod);
+        });
       }
-      otherMethods.forEach(stubMethod => {
-        obj[stubMethod] = dummyMethod(stubMethod);
-      });
       return obj;
     },
 
