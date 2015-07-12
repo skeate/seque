@@ -2,6 +2,9 @@
 [![Build Status](https://travis-ci.org/skeate/seque.svg?branch=master)](https://travis-ci.org/skeate/seque)
 [![Test Coverage](https://codeclimate.com/github/skeate/seque/badges/coverage.svg)](https://codeclimate.com/github/skeate/seque/coverage)
 [![Code Climate](https://codeclimate.com/github/skeate/seque/badges/gpa.svg)](https://codeclimate.com/github/skeate/seque)
+[![npm version](https://badge.fury.io/js/seque.svg)](http://badge.fury.io/js/seque)
+[![bower version](https://badge.fury.io/bo/seque.svg)](http://badge.fury.io/bo/seque)
+[![Dev Status](https://david-dm.org/skeate/seque/dev-status.svg)](https://david-dm.org/skeate/seque#info=devDependencies&view=table)
 
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/seque-tests.svg)](https://saucelabs.com/u/seque-tests)
 
