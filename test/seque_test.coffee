@@ -89,6 +89,23 @@ describe 'if(cond)..else..endif', ->
     spy2.callCount.should.equal 0
     spy3.callCount.should.equal 0
     spy4.callCount.should.equal 10
+  it 'should allow different object types to be chained with extraMethods', ->
+    spy = sinon.spy -> 3
+    x = {
+      y: -> {
+        z: spy
+      },
+      q: -> 5
+    }
+    x
+      .if true, ['z']
+      .y()
+      .z()
+      .else()
+      .q()
+      .endif()
+      .should.equal 3
+    spy.callCount.should.equal 1
 
 describe 'loops', ->
   describe 'while(condFunc)..endwhile', ->
@@ -103,6 +120,21 @@ describe 'loops', ->
         .endwhile()
         .should.deep.equal [32]
       times2.callCount.should.equal 5
+    it 'should allow different object types to be chained with extraMethods', ->
+      spy = sinon.spy -> x
+      x = {
+        y: -> {
+          z: spy
+        },
+        q: -> 5
+      }
+      count = 5
+      x
+        .while (-> count--), ['z']
+        .y()
+        .z()
+        .endwhile()
+      spy.callCount.should.equal 5
   describe 'loop(n)..endloop', ->
     it 'should loop n times', ->
       times2 = sinon.spy (x) -> x * 2
@@ -113,10 +145,25 @@ describe 'loops', ->
         .endloop()
         .should.deep.equal [32]
       times2.callCount.should.equal 5
+    it 'should allow different object types to be chained with extraMethods', ->
+      spy = sinon.spy -> x
+      x = {
+        y: -> {
+          z: spy
+        },
+        q: -> 5
+      }
+      count = 5
+      x
+        .loop 5, ['z']
+        .y()
+        .z()
+        .endloop()
+      spy.callCount.should.equal 5
 
-if typeof(Proxy) != 'undefined'
-  describe 'proxy version (browser dependent)', ->
-    it 'should allow different object types to be chained', ->
+describe 'proxy version (if supported)', ->
+  it 'should allow different object types to be chained', ->
+    if typeof(Proxy) != 'undefined'
       x = {
         y: -> {
           z: -> 3
@@ -131,5 +178,5 @@ if typeof(Proxy) != 'undefined'
         .q()
         .endif()
         .should.equal 3
-else
-  console.log 'no proxy support'
+    else
+      console.log 'no proxy support'

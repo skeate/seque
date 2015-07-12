@@ -86,7 +86,9 @@ var Seque = (function () {
   Object.prototype['if'] = function (cond) {
     var _this = this;
 
-    return utils.wrap(this, 'endif', ['else'], function (callStack) {
+    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+
+    return utils.wrap(this, 'endif', extraMethods.concat('else'), function (callStack) {
       var i = undefined;
       for (i = 0; i < callStack.length; i++) {
         if (callStack[i][0] === 'else') {
@@ -100,8 +102,10 @@ var Seque = (function () {
   };
 
   Object.prototype['while'] = function (condFunc) {
+    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+
     var that = this;
-    return utils.wrap(this, 'endwhile', [], function (callStack) {
+    return utils.wrap(this, 'endwhile', extraMethods, function (callStack) {
       while (condFunc()) {
         that = utils.applyStack(that, callStack);
       }
@@ -110,8 +114,10 @@ var Seque = (function () {
   };
 
   Object.prototype.loop = function (n) {
+    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+
     var that = this;
-    return utils.wrap(this, 'endloop', [], function (callStack) {
+    return utils.wrap(this, 'endloop', extraMethods, function (callStack) {
       while (n--) {
         that = utils.applyStack(that, callStack);
       }

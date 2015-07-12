@@ -68,8 +68,8 @@ let Seque = (function() {
     }
   };
 
-  Object.prototype.if = function(cond) {
-    return utils.wrap(this, 'endif', ['else'], callStack => {
+  Object.prototype.if = function(cond, extraMethods = []) {
+    return utils.wrap(this, 'endif', extraMethods.concat('else'), callStack => {
       let i;
       for (i = 0; i < callStack.length; i++) {
         if (callStack[i][0] === 'else') {
@@ -82,9 +82,9 @@ let Seque = (function() {
     });
   };
 
-  Object.prototype.while = function(condFunc) {
+  Object.prototype.while = function(condFunc, extraMethods = []) {
     var that = this;
-    return utils.wrap(this, 'endwhile', [], callStack => {
+    return utils.wrap(this, 'endwhile', extraMethods, callStack => {
       while (condFunc()) {
         that = utils.applyStack(that, callStack);
       }
@@ -92,9 +92,9 @@ let Seque = (function() {
     });
   };
 
-  Object.prototype.loop = function(n) {
+  Object.prototype.loop = function(n, extraMethods = []) {
     var that = this;
-    return utils.wrap(this, 'endloop', [], callStack => {
+    return utils.wrap(this, 'endloop', extraMethods, callStack => {
       while (n--) {
         that = utils.applyStack(that, callStack);
       }
