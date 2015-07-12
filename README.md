@@ -3,6 +3,8 @@
 [![Test Coverage](https://codeclimate.com/github/skeate/seque/badges/coverage.svg)](https://codeclimate.com/github/skeate/seque/coverage)
 [![Code Climate](https://codeclimate.com/github/skeate/seque/badges/gpa.svg)](https://codeclimate.com/github/skeate/seque)
 
+[![Sauce Test Status](https://saucelabs.com/browser-matrix/seque-tests.svg)](https://saucelabs.com/u/seque-tests)
+
 # seque
 chainable utility methods for javascript
 
