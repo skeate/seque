@@ -161,6 +161,44 @@ describe 'loops', ->
         .endloop()
       spy.callCount.should.equal 5
 
+describe 'Promise handling', ->
+  describe 'ifAsync', ->
+    it 'should branch conditionally based on promise return value', (done) ->
+      spy1 = sinon.spy()
+      spy2 = sinon.spy()
+      p1 = Promise.resolve true
+        .ifAsync (x) -> x
+        .then spy1
+        .else()
+        .then spy2
+        .endif()
+      p2 = Promise.resolve false
+        .ifAsync (x) -> x
+        .then spy2
+        .else()
+        .then spy1
+        .endif()
+      Promise.all [p1, p2]
+        .then ->
+          spy1.callCount.should.equal 2
+          spy2.called.should.equal false
+          done()
+        .catch (err) ->
+          done err
+  describe 'whileAsync', ->
+    it 'should loop conditionally based on promise return value', (done) ->
+      count = 5
+      spy = sinon.spy -> --count
+      Promise.resolve true
+        .whileAsync (x) -> x
+        .then spy
+        .endwhile()
+        .then ->
+          spy.callCount.should.equal 5
+          done()
+        .catch (err) ->
+          done err
+
 describe 'proxy version (if supported)', ->
   it 'should allow different object types to be chained', ->
     if typeof(Proxy) != 'undefined'

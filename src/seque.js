@@ -68,17 +68,32 @@ let Seque = (function() {
     }
   };
 
-  Object.prototype.if = function(cond, extraMethods = []) {
-    return utils.wrap(this, 'endif', extraMethods.concat('else'), callStack => {
-      let i;
-      for (i = 0; i < callStack.length; i++) {
-        if (callStack[i][0] === 'else') {
-          break;
-        }
+  // note: passing in context here rather than using .bind() because
+  // phantomjs 1.9 doesn't have .bind(). >:(
+  let handleIfElseStack = (context, cond) => function(callStack) {
+    let i;
+    for (i = 0; i < callStack.length; i++) {
+      if (callStack[i][0] === 'else') {
+        break;
       }
-      var ifStack = callStack.slice(0, i);
-      var elseStack = callStack.slice(i + 1, callStack.length);
-      return utils.applyStack(this, (cond) ? ifStack : elseStack);
+    }
+    var ifStack = callStack.slice(0, i);
+    var elseStack = callStack.slice(i + 1, callStack.length);
+    return utils.applyStack(context, (cond) ? ifStack : elseStack);
+  };
+
+  Object.prototype.if = function(cond, extraMethods = []) {
+    return utils.wrap(
+      this,
+      'endif',
+      extraMethods.concat('else'),
+      handleIfElseStack(this, cond)
+    );
+  };
+
+  Object.prototype.ifAsync = function(condFunc) {
+    return utils.wrap(this, 'endif', ['else'], callStack => {
+      return this.then(x => handleIfElseStack(this, condFunc(x))(callStack));
     });
   };
 
@@ -90,6 +105,14 @@ let Seque = (function() {
       }
       return that;
     });
+  };
+
+  Object.prototype.whileAsync = function(condFunc) {
+    return utils.wrap(this, 'endwhile', [], (function loop(context) {
+      return callStack => context.then(x => condFunc(x) ?
+        loop(utils.applyStack(context, callStack))(callStack) : context
+      );
+    }(this)));
   };
 
   Object.prototype.loop = function(n, extraMethods = []) {

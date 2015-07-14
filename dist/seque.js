@@ -8,7 +8,7 @@
   }
 }(this, function() {
 /**
- * seque v1.0.0
+ * seque v1.1.0
  * chainable utility methods for javascript
  *
  * by skeate
@@ -83,12 +83,10 @@ var Seque = (function () {
     }
   };
 
-  Object.prototype['if'] = function (cond) {
-    var _this = this;
-
-    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
-
-    return utils.wrap(this, 'endif', extraMethods.concat('else'), function (callStack) {
+  // note: passing in context here rather than using .bind() because
+  // phantomjs 1.9 doesn't have .bind(). >:(
+  var handleIfElseStack = function handleIfElseStack(context, cond) {
+    return function (callStack) {
       var i = undefined;
       for (i = 0; i < callStack.length; i++) {
         if (callStack[i][0] === 'else') {
@@ -97,7 +95,23 @@ var Seque = (function () {
       }
       var ifStack = callStack.slice(0, i);
       var elseStack = callStack.slice(i + 1, callStack.length);
-      return utils.applyStack(_this, cond ? ifStack : elseStack);
+      return utils.applyStack(context, cond ? ifStack : elseStack);
+    };
+  };
+
+  Object.prototype['if'] = function (cond) {
+    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+
+    return utils.wrap(this, 'endif', extraMethods.concat('else'), handleIfElseStack(this, cond));
+  };
+
+  Object.prototype.ifAsync = function (condFunc) {
+    var _this = this;
+
+    return utils.wrap(this, 'endif', ['else'], function (callStack) {
+      return _this.then(function (x) {
+        return handleIfElseStack(_this, condFunc(x))(callStack);
+      });
     });
   };
 
@@ -111,6 +125,16 @@ var Seque = (function () {
       }
       return that;
     });
+  };
+
+  Object.prototype.whileAsync = function (condFunc) {
+    return utils.wrap(this, 'endwhile', [], (function loop(context) {
+      return function (callStack) {
+        return context.then(function (x) {
+          return condFunc(x) ? loop(utils.applyStack(context, callStack))(callStack) : context;
+        });
+      };
+    })(this));
   };
 
   Object.prototype.loop = function (n) {
