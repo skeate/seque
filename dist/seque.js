@@ -8,7 +8,7 @@
   }
 }(this, function() {
 /**
- * seque v1.1.0
+ * seque v1.2.1
  * chainable utility methods for javascript
  *
  * by skeate
