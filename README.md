@@ -9,7 +9,7 @@
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/seque-tests.svg)](https://saucelabs.com/u/seque-tests)
 
 # seque
-chainable utility methods for javascript
+chainable control flow methods for javascript
 
 # what?
 
@@ -25,6 +25,8 @@ arr
   // at this point we have either [2,4,6] or [1,3,5] depending on the value
   // of useEvens
 ```
+
+see also: https://skeate.github.io/2015/07/17/Seque-What-It-Is-and-How-It-Works.html
 
 # why?
 
