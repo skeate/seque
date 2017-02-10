@@ -9,6 +9,8 @@
 [![Sauce Test Status](https://saucelabs.com/browser-matrix/seque-tests.svg)](https://saucelabs.com/u/seque-tests)
 
 # seque
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/skeate/seque.svg)](https://greenkeeper.io/)
 chainable control flow methods for javascript
 
 # what?
