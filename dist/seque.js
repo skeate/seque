@@ -7,6 +7,8 @@
     root.Seque = factory();
   }
 }(this, function() {
+'use strict';
+
 /**
  * seque v1.2.1
  * chainable utility methods for javascript
@@ -15,9 +17,7 @@
  * http://github.com/skeate/seque
  */
 
-'use strict';
-
-var Seque = (function () {
+var Seque = function () {
   var utils = {
     wrap: function wrap(obj, until, otherMethods, callback) {
       var stopCount = typeof until === 'number';
@@ -39,43 +39,40 @@ var Seque = (function () {
           }
         });
       } else {
-        (function () {
-          if (!stopCount) {
-            otherMethods.push(until);
-          }
-          var proto = obj;
-          obj = Object.create(proto);
-          var dummyMethod = function dummyMethod(methodName) {
-            return function () {
-              if (methodName !== until) {
-                callStack.push([methodName, arguments]);
-              }
-              if (stopCount && callStack.length >= until || methodName === until) {
-                return callback(callStack);
-              }
-              return obj;
-            };
-          };
-          var makeStub = function makeStub(method) {
-            if (proto[method] instanceof Function && !obj.hasOwnProperty(method)) {
-              if (method === 'hasOwnProperty') {
-                return;
-              }
-              obj[method] = dummyMethod(method);
+        if (!stopCount) {
+          otherMethods.push(until);
+        }
+        var proto = obj;
+        obj = Object.create(proto);
+        var dummyMethod = function dummyMethod(methodName) {
+          return function () {
+            if (methodName !== until) {
+              callStack.push([methodName, arguments]);
             }
+            if (stopCount && callStack.length >= until || methodName === until) {
+              return callback(callStack);
+            }
+            return obj;
           };
-          while (proto) {
-            Object.getOwnPropertyNames(proto).forEach(makeStub);
-            proto = Object.getPrototypeOf(proto);
+        };
+        var makeStub = function makeStub(method) {
+          if (proto[method] instanceof Function && !obj.hasOwnProperty(method)) {
+            if (method === 'hasOwnProperty') {
+              return;
+            }
+            obj[method] = dummyMethod(method);
           }
-          otherMethods.forEach(function (stubMethod) {
-            obj[stubMethod] = dummyMethod(stubMethod);
-          });
-        })();
+        };
+        while (proto) {
+          Object.getOwnPropertyNames(proto).forEach(makeStub);
+          proto = Object.getPrototypeOf(proto);
+        }
+        otherMethods.forEach(function (stubMethod) {
+          obj[stubMethod] = dummyMethod(stubMethod);
+        });
       }
       return obj;
     },
-
     applyStack: function applyStack(obj, callStack) {
       return callStack.reduce(function (obj, margs) {
         return obj[margs[0]].apply(obj, margs[1]);
@@ -87,7 +84,7 @@ var Seque = (function () {
   // phantomjs 1.9 doesn't have .bind(). >:(
   var handleIfElseStack = function handleIfElseStack(context, cond) {
     return function (callStack) {
-      var i = undefined;
+      var i = void 0;
       for (i = 0; i < callStack.length; i++) {
         if (callStack[i][0] === 'else') {
           break;
@@ -99,8 +96,8 @@ var Seque = (function () {
     };
   };
 
-  Object.prototype['if'] = function (cond) {
-    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+  Object.prototype.if = function (cond) {
+    var extraMethods = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
     return utils.wrap(this, 'endif', extraMethods.concat('else'), handleIfElseStack(this, cond));
   };
@@ -115,8 +112,8 @@ var Seque = (function () {
     });
   };
 
-  Object.prototype['while'] = function (condFunc) {
-    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+  Object.prototype.while = function (condFunc) {
+    var extraMethods = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
     var that = this;
     return utils.wrap(this, 'endwhile', extraMethods, function (callStack) {
@@ -128,17 +125,17 @@ var Seque = (function () {
   };
 
   Object.prototype.whileAsync = function (condFunc) {
-    return utils.wrap(this, 'endwhile', [], (function loop(context) {
+    return utils.wrap(this, 'endwhile', [], function loop(context) {
       return function (callStack) {
         return context.then(function (x) {
           return condFunc(x) ? loop(utils.applyStack(context, callStack))(callStack) : context;
         });
       };
-    })(this));
+    }(this));
   };
 
   Object.prototype.loop = function (n) {
-    var extraMethods = arguments[1] === undefined ? [] : arguments[1];
+    var extraMethods = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
 
     var that = this;
     return utils.wrap(this, 'endloop', extraMethods, function (callStack) {
@@ -150,6 +147,6 @@ var Seque = (function () {
   };
 
   return utils;
-})();
+}();
 return Seque;
 }));
