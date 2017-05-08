@@ -1,6 +1,5 @@
 if typeof(window) == 'undefined'
   sinon = require 'sinon'
-  Promise = require 'bluebird'
   chai = require 'chai'
   chai.should()
   require '../src/seque'
@@ -55,9 +54,9 @@ describe 'if(cond)..else..endif', ->
       .endif()
       .map(spy)`
     spy.callCount.should.equal 10
-  it 'should be able to handle promise chains immediately', (done) ->
+  it 'should be able to handle promise chains immediately', () ->
     @timeout 400
-    p = new Promise (resolve, reject) -> setTimeout resolve, 200
+    p = new Promise (resolve, reject) -> setTimeout resolve, 100
     a = 0
     p
       .then -> a++
@@ -66,7 +65,6 @@ describe 'if(cond)..else..endif', ->
       .endif()
       .then ->
         a.should.equal 1
-        done()
   it 'should run else iff the if condition is false', ->
     spy1 = sinon.spy()
     spy2 = sinon.spy()
@@ -163,7 +161,7 @@ describe 'loops', ->
 
 describe 'Promise handling', ->
   describe 'ifAsync', ->
-    it 'should branch conditionally based on promise return value', (done) ->
+    it 'should branch conditionally based on promise return value', () ->
       spy1 = sinon.spy()
       spy2 = sinon.spy()
       p1 = Promise.resolve true
@@ -182,11 +180,8 @@ describe 'Promise handling', ->
         .then ->
           spy1.callCount.should.equal 2
           spy2.called.should.equal false
-          done()
-        .catch (err) ->
-          done err
   describe 'whileAsync', ->
-    it 'should loop conditionally based on promise return value', (done) ->
+    it 'should loop conditionally based on promise return value', () ->
       count = 5
       spy = sinon.spy -> --count
       Promise.resolve true
@@ -195,9 +190,6 @@ describe 'Promise handling', ->
         .endwhile()
         .then ->
           spy.callCount.should.equal 5
-          done()
-        .catch (err) ->
-          done err
 
 describe 'proxy version (if supported)', ->
   it 'should allow different object types to be chained', ->

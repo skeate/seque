@@ -3,12 +3,12 @@ var babel = require('gulp-babel');
 var umd = require('gulp-umd');
 var karma = require('karma').server;
 var mocha = require('gulp-mocha');
-require('coffee-script/register');
-require('babel/register');
 
 gulp.task('build', function() {
   gulp.src('src/**/*.js')
-  .pipe(babel())
+  .pipe(babel({
+    presets: ['env']
+  }))
   .pipe(umd())
   .pipe(gulp.dest('dist'))
   ;
@@ -16,7 +16,7 @@ gulp.task('build', function() {
 
 gulp.task('test', function() {
   gulp.src('./test/seque_test.coffee', {read: false})
-    .pipe(mocha());
+    .pipe(mocha({compilers: 'coffee:coffee-script/register'}));
 });
 
 gulp.task('default', ['build']);
