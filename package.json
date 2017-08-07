@@ -36,7 +36,7 @@
     "codeclimate-test-reporter": "^0.4.0",
     "coffee-script": "^1.9.3",
     "gulp": "^3.9.0",
-    "gulp-babel": "^6.1.2",
+    "gulp-babel": "^7.0.0",
     "gulp-mocha": "^4.3.1",
     "gulp-umd": "^0.2.0",
     "karma": "^1.4.1",
