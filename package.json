@@ -39,7 +39,7 @@
     "gulp-babel": "^6.1.2",
     "gulp-mocha": "^4.3.1",
     "gulp-umd": "^0.2.0",
-    "karma": "^1.4.1",
+    "karma": "^2.0.0",
     "karma-babel-preprocessor": "^6.0.1",
     "karma-coffee-preprocessor": "^1.0.1",
     "karma-coverage": "^1.1.1",
