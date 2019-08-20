@@ -37,7 +37,7 @@
     "coffee-script": "^1.9.3",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
-    "gulp-mocha": "^4.3.1",
+    "gulp-mocha": "^7.0.1",
     "gulp-umd": "^2.0.0",
     "karma": "^1.7.1",
     "karma-babel-preprocessor": "^7.0.0",
